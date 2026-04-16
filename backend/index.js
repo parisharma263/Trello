@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const seedData = require('./seed');
 
 const app = express();
-const PORT = 5000;
+ 
 
 let dbAvailable = true;
 
