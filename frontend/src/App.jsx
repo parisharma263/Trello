@@ -33,7 +33,7 @@ function App() {
   useEffect(() => {
     const initDefaultLogin = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/auth/default-login');
+const res = await axios.get('https://trello-ginz.onrender.com/auth/default-login');
         setUser(res.data);
         localStorage.setItem('user', JSON.stringify(res.data));
       } catch (error) {
