@@ -159,24 +159,24 @@ app.get('/boards/:id/lists', async (req, res) => {
 
 // ================= START SERVER =================
 
-const startServer = async () => {
-  try {
-    await seedDefaultUserIfMissing();
+const PORT = process.env.PORT || 5000;
 
-    const [rows] = await db.query("SELECT * FROM boards");
-
-    if (rows.length === 0) {
-      await seedData();
+app.listen(PORT, '0.0.0.0', async () => {
+    console.log(`Server running on port ${PORT}`);
+    
+    try {
+        // Force fully database check karega, agar fail hua toh log mein dikhega
+        await seedDefaultUserIfMissing();
+        
+        const [rows] = await db.query("SELECT * FROM boards");
+        if (rows.length === 0) {
+            await seedData();
+            console.log("🌱 Database seeded with initial data!");
+        }
+        
+        console.log("✅ Database connected and ready!");
+    } catch (err) {
+        console.error("❌ Database Error:", err.message);
+        // Ab agar connection fail hua, toh Render logs mein saaf dikhega kyun hua
     }
-
-  } catch (err) {
-    console.log("⚠️ DEMO MODE ACTIVE");
-    dbAvailable = false;
-  }
-
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-};
-
-startServer();
+});
