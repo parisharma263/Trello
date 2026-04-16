@@ -13,14 +13,13 @@ let dbAvailable = true;
 app.use(cors());
 app.use(express.json());
 
-// Default user
+// ================= DEFAULT USER =================
+
 const DEFAULT_USER = {
   username: 'user',
   email: 'user@gmail.com',
   password: 'user123',
 };
-
-// ================== DEFAULT USER ==================
 
 async function seedDefaultUserIfMissing() {
   const [existing] = await db.query(
@@ -40,28 +39,25 @@ async function seedDefaultUserIfMissing() {
   return result.insertId;
 }
 
-async function seedDefaultUserAndLinkData() {
-  return await seedDefaultUserIfMissing();
-}
+// ================= ROUTES =================
 
-// ================== ROUTES ==================
-
+// health
 app.get('/', (req, res) => {
   res.send('Server running 🚀');
 });
 
-// DEFAULT LOGIN
+// ✅ DEFAULT LOGIN
 app.get('/auth/default-login', async (req, res) => {
   try {
     if (!dbAvailable) {
       return res.json({
         id: 1,
-        email: "demo@test.com",
+        email: "user@gmail.com",
         name: "Demo User"
       });
     }
 
-    const userId = await seedDefaultUserAndLinkData();
+    const userId = await seedDefaultUserIfMissing();
 
     const [users] = await db.query(
       'SELECT id, email, username FROM users WHERE id = ?',
@@ -77,20 +73,19 @@ app.get('/auth/default-login', async (req, res) => {
   } catch (err) {
     res.json({
       id: 1,
-      email: "demo@test.com",
+      email: "user@gmail.com",
       name: "Demo User"
     });
   }
 });
 
-// ================== BOARDS ==================
+// ================= BOARDS =================
 
 app.get('/boards', async (req, res) => {
   try {
     if (!dbAvailable) {
       return res.json([
-        { id: 1, title: "Demo Board 1" },
-        { id: 2, title: "Demo Board 2" }
+        { id: 1, title: "Demo Project Board" }
       ]);
     }
 
@@ -102,34 +97,37 @@ app.get('/boards', async (req, res) => {
   }
 });
 
-// ================== LISTS + CARDS ==================
+// ================= LISTS + CARDS =================
 
 app.get('/boards/:id/lists', async (req, res) => {
   try {
 
-    // DEMO MODE
+    // 🔥 DEMO DATA (NO DB)
     if (!dbAvailable) {
       return res.json([
         {
           id: 1,
           title: "To Do",
           cards: [
-            {
-              id: 1,
-              title: "Demo Task 1",
-              description: "This is demo data"
-            }
+            { id: 1, title: "Design UI", description: "Landing page design" },
+            { id: 2, title: "Setup backend", description: "Express setup" },
+            { id: 3, title: "API connect", description: "Frontend integration" }
           ]
         },
         {
           id: 2,
+          title: "In Progress",
+          cards: [
+            { id: 4, title: "Drag & Drop", description: "Implement feature" },
+            { id: 5, title: "Checklist", description: "Add checklist UI" }
+          ]
+        },
+        {
+          id: 3,
           title: "Done",
           cards: [
-            {
-              id: 2,
-              title: "Demo Task 2",
-              description: "Completed task"
-            }
+            { id: 6, title: "Project setup", description: "Initial structure" },
+            { id: 7, title: "Routing", description: "React routing done" }
           ]
         }
       ]);
@@ -160,11 +158,11 @@ app.get('/boards/:id/lists', async (req, res) => {
   }
 });
 
-// ================== START SERVER ==================
+// ================= START SERVER =================
 
 const startServer = async () => {
   try {
-    await seedDefaultUserAndLinkData();
+    await seedDefaultUserIfMissing();
 
     const [rows] = await db.query("SELECT * FROM boards");
 
