@@ -20,7 +20,7 @@ const Favorites = () => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/boards');
+        const response = await axios.get('https://trello-mi7p.onrender.com/boards');
         // Filter naturally right after fetching
         setBoards(response.data.filter(b => b.is_favorite));
       } catch (err) {
@@ -34,7 +34,7 @@ const Favorites = () => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      await axios.put(`http://localhost:5000/boards/${board.id}/favorite`, { is_favorite: false });
+      await axios.put(`https://trello-mi7p.onrender.com/boards/${board.id}/favorite`, { is_favorite: false });
       // Removing it locally from the UI exclusively because it's no longer a favorite!
       setBoards(boards.filter(b => b.id !== board.id));
     } catch (err) {
