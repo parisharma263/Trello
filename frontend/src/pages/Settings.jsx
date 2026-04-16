@@ -22,7 +22,7 @@ const Settings = () => {
   const handleUpdateUsername = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`http://localhost:5000/users/${user.id}`, { username: newUsername });
+      const res = await axios.put(`https://trello-mi7p.onrender.com/users/${user.id}`, { username: newUsername });
       if (res.data.success) {
         setProfileMessage("Username updated successfully!");
         const updatedUser = { ...user, name: newUsername };
@@ -40,7 +40,7 @@ const Settings = () => {
     e.preventDefault();
     if (!oldPassword || !newPassword) return;
     try {
-      const res = await axios.put(`http://localhost:5000/users/${user.id}/password`, { oldPassword, newPassword });
+      const res = await axios.put(`https://trello-mi7p.onrender.com/users/${user.id}/password`, { oldPassword, newPassword });
       if (res.data.success) {
         setPasswordMessage("Password changed successfully!");
         setOldPassword('');
