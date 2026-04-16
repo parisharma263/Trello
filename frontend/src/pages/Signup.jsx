@@ -12,7 +12,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/signup', { name, email, password });
+      await axios.post('https://trello-mi7p.onrender.com/signup', { name, email, password });
       alert('Signup successful! Please log in.');
       navigate('/');
     } catch (err) {
