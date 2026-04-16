@@ -11,7 +11,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/login', { email, password });
+      const res = await axios.post('https://trellooo.onrender.com/login', { email, password });
       if (res.data.id) {
         // Store user normally using localStorage
         localStorage.setItem('user', JSON.stringify(res.data));
