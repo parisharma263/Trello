@@ -161,7 +161,7 @@ const Board = () => {
     if (missingTitles.length === 0) return;
 
     for (const title of missingTitles) {
-      await axios.post('http://localhost:5000/lists', {
+      await axios.post('https://trello-mi7p.onrender.com/lists', {
         title,
         board_id: id,
         position: existingLists.length + 1,
@@ -172,11 +172,11 @@ const Board = () => {
 
   const fetchLists = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/boards/${id}/lists`);
+      const response = await axios.get(`https://trello-mi7p.onrender.com/boards/${id}/lists`);
       const fetchedLists = response.data;
       await ensureDefaultTimeLists([...fetchedLists]);
 
-      const refreshedResponse = await axios.get(`http://localhost:5000/boards/${id}/lists`);
+      const refreshedResponse = await axios.get(`https://trello-mi7p.onrender.com/boards/${id}/lists`);
       setLists(refreshedResponse.data);
       setLoading(false);
     } catch (err) {
@@ -194,7 +194,7 @@ const Board = () => {
     try {
       const currentList = lists.find((l) => l.id === listId);
       const position = currentList.cards ? currentList.cards.length + 1 : 1;
-      await axios.post('http://localhost:5000/cards', { title: newCardTitle, list_id: listId, position, user_id: user?.id });
+      await axios.post('https://trello-mi7p.onrender.com/cards', { title: newCardTitle, list_id: listId, position, user_id: user?.id });
       setNewCardTitle('');
       setAddingListId(null);
       fetchLists();
@@ -205,7 +205,7 @@ const Board = () => {
     if (!newListTitle.trim()) { setIsAddingList(false); return; }
     try {
       const pos = lists.length + 1;
-      await axios.post('http://localhost:5000/lists', { title: newListTitle, board_id: id, position: pos });
+      await axios.post('https://trello-mi7p.onrender.com/lists', { title: newListTitle, board_id: id, position: pos });
       setNewListTitle('');
       setIsAddingList(false);
       fetchLists();
@@ -215,14 +215,14 @@ const Board = () => {
   const handleDeleteCard = async (e, cardId) => {
     e.stopPropagation();
     if (!window.confirm("Delete this card?")) return;
-    try { await axios.delete(`http://localhost:5000/cards/${cardId}`); fetchLists(); } catch (err) { alert("Failed."); }
+    try { await axios.delete(`https://trello-mi7p.onrender.com/cards/${cardId}`); fetchLists(); } catch (err) { alert("Failed."); }
   };
 
   // Fetch checklist for a given card
   const fetchChecklist = async (cardId) => {
     try {
       setChecklistLoading(true);
-      const res = await axios.get(`http://localhost:5000/cards/${cardId}/checklist`);
+      const res = await axios.get(`https://trello-mi7p.onrender.com/cards/${cardId}/checklist`);
       setChecklistItems(res.data);
     } catch (err) {
       console.error('Failed to fetch checklist', err);
@@ -235,7 +235,7 @@ const Board = () => {
   const handleAddChecklistItem = async () => {
     if (!modalCard || !newChecklistText.trim()) return;
     try {
-      await axios.post('http://localhost:5000/checklist/item', {
+      await axios.post('https://trello-mi7p.onrender.com/checklist/item', {
         checklist_id: modalCard.id,
         text: newChecklistText.trim(),
       });
@@ -249,7 +249,7 @@ const Board = () => {
 
   const handleToggleChecklistItem = async (itemId) => {
     try {
-      await axios.put(`http://localhost:5000/checklist/item/${itemId}`);
+      await axios.put(`https://trello-mi7p.onrender.com/checklist/item/${itemId}`);
       if (modalCard) fetchChecklist(modalCard.id);
     } catch (err) {
       console.error('Failed to toggle checklist item', err);
@@ -258,7 +258,7 @@ const Board = () => {
 
   const handleDeleteChecklistItem = async (itemId) => {
     try {
-      await axios.delete(`http://localhost:5000/checklist/item/${itemId}`);
+      await axios.delete(`https://trello-mi7p.onrender.com/checklist/item/${itemId}`);
       if (modalCard) fetchChecklist(modalCard.id);
     } catch (err) {
       console.error('Failed to delete checklist item', err);
@@ -291,7 +291,7 @@ const Board = () => {
   const handleUpdateCard = async () => {
     if (!modalCard || !editCardTitle.trim()) { alert("Title is mandatory!"); return; }
     try {
-      await axios.put(`http://localhost:5000/cards/${modalCard.id}`, { 
+      await axios.put(`https://trello-mi7p.onrender.com/cards/${modalCard.id}`, { 
         title: editCardTitle, 
         description: editCardDescription,
         due_date: editCardDueDate || null
@@ -303,7 +303,7 @@ const Board = () => {
 
   const handleDeleteList = async (listId) => {
     if (!window.confirm("Delete this entire list?")) return;
-    try { await axios.delete(`http://localhost:5000/lists/${listId}`); fetchLists(); } catch (err) { alert("Failed."); }
+    try { await axios.delete(`https://trello-mi7p.onrender.com/lists/${listId}`); fetchLists(); } catch (err) { alert("Failed."); }
   };
 
 
@@ -378,7 +378,7 @@ const Board = () => {
 
     // Step C: Update Backend asynchronously silently maintaining UX consistency magically
     try {
-      await axios.put(`http://localhost:5000/cards/${activeId}/move`, { list_id: targetListId, position: 1 });
+      await axios.put(`https://trello-mi7p.onrender.com/cards/${activeId}/move`, { list_id: targetListId, position: 1 });
       // Leaving out auto-fetch guarantees your optimistic local mapping array visual layout holds smoothly undisturbed natively
     } catch (error) {
       console.error(error);
