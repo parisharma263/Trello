@@ -27,7 +27,7 @@ const Boards = () => {
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/boards');
+        const response = await axios.get('https://trello-mi7p.onrender.com/boards');
         setBoards(response.data);
       } catch (err) {
         console.error("Failed to fetch boards", err);
@@ -52,7 +52,7 @@ const Boards = () => {
     e.stopPropagation();
     const newFavStatus = !board.is_favorite;
     try {
-      await axios.put(`http://localhost:5000/boards/${board.id}/favorite`, { is_favorite: newFavStatus });
+      await axios.put(`https://trello-mi7p.onrender.com/boards/${board.id}/favorite`, { is_favorite: newFavStatus });
       setBoards(boards.map(b => b.id === board.id ? { ...b, is_favorite: newFavStatus } : b));
     } catch (err) {
       console.error('Failed to toggle favorite', err);
@@ -62,7 +62,7 @@ const Boards = () => {
   const handleRenameBoardSubmit = async () => {
     if (!renameBoardTitle.trim()) return;
     try {
-      await axios.put(`http://localhost:5000/boards/${boardToRename.id}`, { title: renameBoardTitle });
+      await axios.put(`https://trello-mi7p.onrender.com/boards/${boardToRename.id}`, { title: renameBoardTitle });
       setBoards(boards.map(b => b.id === boardToRename.id ? { ...b, title: renameBoardTitle } : b));
       setIsRenameModalOpen(false);
       setRenameBoardTitle('');
@@ -78,7 +78,7 @@ const Boards = () => {
     e.stopPropagation();
     if (window.confirm('Are you sure you want to delete this board and all its nested lists/cards?')) {
       try {
-        await axios.delete(`http://localhost:5000/boards/${boardId}`);
+        await axios.delete(`https://trello-mi7p.onrender.com/boards/${boardId}`);
         setBoards(boards.filter(b => b.id !== boardId));
       } catch (err) {
         console.error('Failed to delete board', err);
@@ -94,7 +94,7 @@ const Boards = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5000/boards', { 
+      const response = await axios.post('https://trello-mi7p.onrender.com/boards', { 
         title: newBoardTitle, 
         owner_id: user.id 
       });
